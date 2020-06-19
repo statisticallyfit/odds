@@ -7,16 +7,32 @@ object BuildSettings {
     version := "0.1-SNAPSHOT",
     scalaOrganization := "org.scala-lang.virtualized",
     scalaVersion := "2.10.2-RC1",
-    resolvers += Resolver.sonatypeRepo("snapshots"),
+    resolvers ++= Seq(
+	Resolver.sonatypeRepo("snapshots"),
+	Resolver.sonatypeRepo("releases")
+    ),
     scalacOptions ++= Seq(
       "-deprecation", "-unchecked", "-feature", "-Xexperimental",
       "-Yvirtualize", "-language:higherKinds"),
     //scalacOptions += "-Xlog-implicits",
     //scalacOptions += "-Ymacro-debug-lite",
     autoAPIMappings := true,
-    libraryDependencies += "org.scalatest" % "scalatest_2.10" % "2.0" % "test",
+    libraryDependencies ++= Seq(
+	"org.scalatest" % "scalatest_2.10" % "2.0" % "test",
+// NOTE: I added these last three dependencies here to make compilation work! Better now except for macros plugin.
+        "org.scala-lang.virtualized" % "scala-library" % "2.10.2-RC1",
+        "org.scala-lang.virtualized" % "scala-reflect" % "2.10.2-RC1",
+        "org.scala-lang.virtualized" % "scala-compiler" % "2.10.2-RC1"
+    ), 
     //libraryDependencies += "EPFL" % "lms_2.10" % "0.3-SNAPSHOT",
-    addCompilerPlugin("org.scala-lang.virtualized.plugins" % "macro-paradise_2.10.2-RC1" % "2.0.0-SNAPSHOT"))
+
+
+//TODO this is the only thing wrong now, the only thing stopping a successful compilation: the macros plugin is not recognized, need it for the odds' inner code...
+
+    //addCompilerPlugin("org.scalamacros" %% "paradise" % "2.0.0-SNAPSHOT"))
+    addCompilerPlugin("org.scala-lang.virtualized.plugins" % "macro-paradise" % "2.1.0"))
+    //addCompilerPlugin("org.scala-lang.virtualized.plugins" % "macro-paradise_2.10.2" % "2.0.0-SNAPSHOT"))
+
 }
 
 object MyBuild extends Build {
